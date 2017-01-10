@@ -1,0 +1,22 @@
+{
+  "name": "yjd-codelab-nodeapi",
+  "version": "1.0.0",
+  "description": "## 체크아웃",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeonghwan-kim/yjd-codelab-nodeapi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeonghwan-kim/yjd-codelab-nodeapi/issues"
+  },
+  "homepage": "https://github.com/jeonghwan-kim/yjd-codelab-nodeapi#readme",
+  "devDependencies": {
+    "express": "^4.14.0"
+  }
+}
