@@ -13,10 +13,15 @@ let users = [{
   name: 'Chris'
 }];
 
-// 라우팅 설정 
+// 라우팅 설정
 app.get('/users', (req, res) => {
-  // 여기에 라우팅 로직을 작성하면 됩니다.
-  res.json(users);
+  const limit = parseInt(req.query.limit, 10);
+  if (Number.isNaN(limit)) return res.status(400).send();
+
+  const offset = parseInt(req.query.offset, 10);
+  if (Number.isNaN(offset)) return res.status(400).end();
+
+  res.json(users.filter((user, idx) => idx >= offset && idx < offset + limit));
 });
 
 app.get('/', (req, res) => {
@@ -26,3 +31,5 @@ app.get('/', (req, res) => {
 app.listen(3000, () => {
   console.log(`Run at http://localhost:3000`)
 });
+
+module.exports = app;
