@@ -1,6 +1,8 @@
 const should = require('should');
 const request = require('supertest');
 const app = require('../../index');
+const db = require('../../../bin/db');
+const models = require('../../models');
 
 const assertUser = (user, id) => {
   user.should.have.properties('id', 'name')
@@ -12,8 +14,11 @@ const assertUser = (user, id) => {
 describe('users', ()=> {
   describe('GET /users', ()=> {
     describe('success', ()=> {
+      const users = [{name:'Alice'},{name:'Bek'},{name:'Chris'}];
       const limit = 2;
       let _res;
+      before('Sync db', ()=> db.sync());
+      before('Insert users', ()=> models.User.bulkCreate(users));
       before(done=>{
         request(app)
             .get(`/users?limit=${limit}&offset=0`)
@@ -24,6 +29,7 @@ describe('users', ()=> {
               done();
             });
       });
+
       it('유저 객체를 담은 배열을 응답한다', ()=> {
         _res.body.should.be.instanceof(Array);
         _res.body.forEach(user=> assertUser(user))
@@ -48,8 +54,11 @@ describe('users', ()=> {
     });
   });
   describe('GET /usres/:id', ()=> {
+    const users = [{name:'Alice'}];
+    before('Sync db', ()=> db.sync());
+    before('Insert users', ()=> models.User.bulkCreate(users));
     describe('success', ()=> {
-      const id = 2;
+      const id = 1;
       let _res;
       before(done => {
         request(app)
@@ -77,15 +86,20 @@ describe('users', ()=> {
             .end(done)
       })
     })
-  })
+  });
+
   describe('DELETE /users/:id', ()=> {
     describe('success', ()=> {
+      const users = [{name:'Alice'}];
+      before('Sync db', ()=> db.sync());
+      before('Insert users', ()=> models.User.bulkCreate(users));
+
       it('204를 응답한다', done=> {
         request(app)
             .delete('/users/1')
             .expect(204)
             .end(done)
-      })
+      });
     });
     describe('error', ()=> {
       it('id가 숫자가 아닐경우 400으로 응답한다', done=> {
@@ -96,7 +110,12 @@ describe('users', ()=> {
       });
     })
   })
+
   describe('POST /users', ()=> {
+    const users = [{name:'Alice'}];
+    before('Sync db', ()=> db.sync());
+    before('Insert users', ()=> models.User.bulkCreate(users));
+
     describe('success', ()=>{
       const user = {name: 'daniel'};
       let _res;
@@ -125,17 +144,22 @@ describe('users', ()=> {
       it('name이 중복일 경우 409를 반환한다',done=> {
         request(app)
             .post('/users')
-            .send({name: 'Bek'})
+            .send({name: users[0].name})
             .expect(409).end(done);
       })
     });
   });
+
   describe('PUT /users/:id', ()=> {
+    const users = [{name:'Alice'},{name:'Bek'}];
+    before('Sync db', ()=> db.sync());
+    before('Insert users', ()=> models.User.bulkCreate(users));
+
     describe('success', ()=> {
       it('변경된 정보를 응답한다', done=> {
-        const editedName = 'Chris 2';
+        const editedName = 'Alice2';
         request(app)
-            .put('/users/3')
+            .put('/users/1')
             .send({name: editedName})
             .expect(200)
             .end((err, res)=> {
@@ -169,8 +193,8 @@ describe('users', ()=> {
       });
       it('이름이 중복일 경우 409 응답', done=> {
         request(app)
-            .put('/users/2')
-            .send({name: 'Bek'})
+            .put('/users/1')
+            .send({name: users[1].name})
             .expect(409)
             .end(done);
       });
