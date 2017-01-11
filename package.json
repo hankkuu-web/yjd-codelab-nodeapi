@@ -4,7 +4,7 @@
   "description": "## 체크아웃",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha  app/index.spec.js",
+    "test": "node_modules/.bin/mocha  app/api/user/user.spec.js",
     "start": "node app"
   },
   "repository": {
@@ -20,7 +20,9 @@
   "devDependencies": {
     "express": "^4.14.0",
     "mocha": "^3.2.0",
+    "sequelize": "^3.29.0",
     "should": "^11.1.2",
+    "sqlite3": "^3.1.8",
     "supertest": "^2.0.1"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 const should = require('should');
 const request = require('supertest');
-const app = require('./index');
+const app = require('../../index');
 
 const assertUser = (user, id) => {
   user.should.have.properties('id', 'name')
