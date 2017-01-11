@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser')
 const app = express();
 
 // 임시데이터
@@ -12,6 +13,9 @@ let users = [{
   id: 3,
   name: 'Chris'
 }];
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/users/:id', (req, res)=> {
   const id = parseInt(req.params.id, 10);
@@ -39,7 +43,21 @@ app.delete('/users/:id', (req, res) => {
 
   users = users.filter(user => user.id !== id);
   res.status(204).end();
-})
+});
+
+app.post('/users', (req, res) => {
+  const name = req.body.name;
+  if (!name || !name.length) return res.status(400).end();
+
+  const isConflict = users.filter(user => user.name === name).length > 0;
+  if (isConflict) return res.status(409).end();
+
+  const id = users.reduce((id, user) => id > user.id ? id : user.id, 0) + 1;
+  const user = {id, name}
+
+  users.push(user);
+  res.status(201).json(user);
+});
 
 app.get('/', (req, res) => {
   res.send('Hello World!\n')

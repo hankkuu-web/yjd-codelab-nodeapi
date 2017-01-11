@@ -96,4 +96,38 @@ describe('users', ()=> {
       });
     })
   })
+  describe('POST /users', ()=> {
+    describe('success', ()=>{
+      const user = {name: 'daniel'};
+      let _res;
+      before(done => {
+        request(app)
+            .post('/users')
+            .send(user)
+            .expect(201)
+            .end((err, res) => {
+              if (err) throw err;
+              _res = res;
+              done();
+            });
+      });
+      it('생성된 유저 객체를 반환한다', ()=> assertUser(_res.body));
+      it('입력한 name을 반환한다', ()=> _res.body.name.should.be.equal(user.name));
+    });
+    describe('error', ()=> {
+      it('name 파라매터 누락시 400을 반환한다', done=> {
+        request(app)
+            .post('/users')
+            .send({})
+            .expect(400)
+            .end(done);
+      });
+      it('name이 중복일 경우 409를 반환한다',done=> {
+        request(app)
+            .post('/users')
+            .send({name: 'Bek'})
+            .expect(409).end(done);
+      })
+    });
+  });
 });
