@@ -47,7 +47,7 @@ describe('users', ()=> {
       });
     });
   });
-  describe('GET /usres:id', ()=> {
+  describe('GET /usres/:id', ()=> {
     describe('success', ()=> {
       const id = 2;
       let _res;
@@ -130,4 +130,50 @@ describe('users', ()=> {
       })
     });
   });
+  describe('PUT /users/:id', ()=> {
+    describe('success', ()=> {
+      it('변경된 정보를 응답한다', done=> {
+        const editedName = 'Chris 2';
+        request(app)
+            .put('/users/3')
+            .send({name: editedName})
+            .expect(200)
+            .end((err, res)=> {
+              if (err) throw err;
+              res.body.should.have.property('name', editedName);
+              done();
+            })
+      })
+    });
+    describe('error', ()=> {
+      it('정수가 아닌 id일 경우 400 응답', done=> {
+        request(app)
+            .put('/users/id')
+            .send({name: 'updated name'})
+            .expect(400)
+            .end(done)
+      });
+      it('name이 없을 경우 400 응답', done=> {
+        request(app)
+            .put('/users/1')
+            .send({})
+            .expect(400)
+            .end(done)
+      });
+      it('없는 유저일 경우 404 응답', done=> {
+        request(app)
+            .put('/users/999')
+            .send({name: 'frank'})
+            .expect(404)
+            .end(done);
+      });
+      it('이름이 중복일 경우 409 응답', done=> {
+        request(app)
+            .put('/users/2')
+            .send({name: 'Bek'})
+            .expect(409)
+            .end(done);
+      });
+    });
+  })
 });
