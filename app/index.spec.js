@@ -47,7 +47,7 @@ describe('users', ()=> {
       });
     });
   });
-  describe('GET /usres', ()=> {
+  describe('GET /usres:id', ()=> {
     describe('success', ()=> {
       const id = 2;
       let _res;
@@ -76,6 +76,24 @@ describe('users', ()=> {
             .expect(404)
             .end(done)
       })
+    })
+  })
+  describe('DELETE /users/:id', ()=> {
+    describe('success', ()=> {
+      it('204를 응답한다', done=> {
+        request(app)
+            .delete('/users/1')
+            .expect(204)
+            .end(done)
+      })
+    });
+    describe('error', ()=> {
+      it('id가 숫자가 아닐경우 400으로 응답한다', done=> {
+        request(app)
+            .delete('/users/id')
+            .expect(400)
+            .end(done)
+      });
     })
   })
 });
