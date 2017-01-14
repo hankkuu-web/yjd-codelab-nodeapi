@@ -18,16 +18,16 @@
   },
   "homepage": "https://github.com/jeonghwan-kim/yjd-codelab-nodeapi#readme",
   "devDependencies": {
-    "express": "^4.14.0",
     "mocha": "^3.2.0",
-    "sequelize": "^3.29.0",
     "should": "^11.1.2",
-    "sqlite3": "^3.1.8",
     "supertest": "^2.0.1"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "express": "^4.14.0",
     "morgan": "^1.7.0",
+    "sequelize": "^3.29.0",
+    "sqlite3": "^3.1.8",
     "swagger-ui": "^2.2.10"
   }
 }
