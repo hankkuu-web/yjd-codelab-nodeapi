@@ -2,7 +2,10 @@ const express = require('express');
 const swaggerDoc = require('./swagger.doc');
 
 const setupSwaggerDocument = app => {
-  app.get('/doc', (req, res) => res.json(swaggerDoc));
+  app.get('/doc', (req, res) => {
+    swaggerDoc.host = req.headers.host;
+    res.json(swaggerDoc)
+  });
 };
 
 const setupSwaggerUi = app => {
